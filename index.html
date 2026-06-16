@@ -367,7 +367,7 @@ fetch(WEB_APP_URL, {
   headers: { "Content-Type": "text/plain;charset=utf-8" },
   body: JSON.stringify({
     thietbi: thietbi,
-    hanhdong: hanhdog,
+    hanhdong: hanhdong,
     deviceNumber: deviceNumber,
     nguoidung: nguoidung
   })
@@ -381,10 +381,6 @@ fetch(WEB_APP_URL, {
   showStatus("❌ Lỗi kết nối!", "error");
   resetBtn();
 });
-    .catch(() => {
-      showStatus("❌ Lỗi kết nối!", "error");
-      resetBtn();
-    });
   }
 
   function getDistance(lat1, lng1, lat2, lng2) {
