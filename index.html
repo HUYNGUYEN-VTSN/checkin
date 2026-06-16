@@ -361,27 +361,26 @@
     btn.textContent = "Đang gửi...";
     showStatus("", "");
 
-    fetch(WEB_APP_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({
-        thietbi: thietbi,
-        hanhdong: hanhdong,
-        deviceNumber: deviceNumber,
-        nguoidung: nguoidung
-      })
-    })
-    .then(r => r.text())
-    .then(t => {
-      if (t.includes("OK")) {
-        showStatus("✅ Xác nhận thành công!", "success");
-        btn.textContent = "✅ HOÀN TẤT";
-        setTimeout(() => location.reload(), 2000);
-      } else {
-        showStatus("❌ Lỗi gửi dữ liệu!", "error");
-        resetBtn();
-      }
-    })
+fetch(WEB_APP_URL, {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-Type": "text/plain;charset=utf-8" },
+  body: JSON.stringify({
+    thietbi: thietbi,
+    hanhdong: hanhdog,
+    deviceNumber: deviceNumber,
+    nguoidung: nguoidung
+  })
+})
+.then(() => {
+  showStatus("✅ Xác nhận thành công!", "success");
+  btn.textContent = "✅ HOÀN TẤT";
+  setTimeout(() => location.reload(), 2000);
+})
+.catch(() => {
+  showStatus("❌ Lỗi kết nối!", "error");
+  resetBtn();
+});
     .catch(() => {
       showStatus("❌ Lỗi kết nối!", "error");
       resetBtn();
