@@ -28,7 +28,7 @@
     }
     .label {
       font-weight: bold;
-      color: #c0392b;
+      : #c0392b;
       font-size: 13px;
       margin-bottom: 8px;
       margin-top: 16px;
@@ -50,7 +50,7 @@
     }
     .opt.selected-thietbi { background: #e8f5e9; border-color: #1a7f4b; color: #1a7f4b; font-weight: bold; }
     .opt.selected-hanhdong-nhan { background: #fff9c4; border-color: #f1c40f; color: #7d6608; font-weight: bold; }
-    .opt.selected-hanhdog-tra { background: #f3e8ff; border-color: #9b59b6; color: #6c3483; font-weight: bold; }
+    .opt.selected-hanhdong-tra { background: #f3e8ff; border-color: #9b59b6; color: #6c3483; font-weight: bold; }
     .opt.selected-bodam { background: #e8f0ff; border-color: #3498db; color: #1a5276; font-weight: bold; }
     .opt.selected-thetu { background: #fce8ff; border-color: #e91e8c; color: #880e4f; font-weight: bold; }
     select {
@@ -100,9 +100,9 @@
 
   <!-- HÀNH ĐỘNG -->
   <div class="label">HÀNH ĐỘNG *</div>
-  <div class="options" id="opts-hanhdog">
-    <div class="opt" onclick="select('hanhdog', 'NHẬN', this)">NHẬN</div>
-    <div class="opt" onclick="select('hanhdog', 'TRẢ', this)">TRẢ</div>
+  <div class="options" id="opts-hanhdong">
+    <div class="opt" onclick="select('hanhdong', 'NHẬN', this)">NHẬN</div>
+    <div class="opt" onclick="select('hanhdong', 'TRẢ', this)">TRẢ</div>
   </div>
 
   <!-- BỘ ĐÀM -->
@@ -152,7 +152,7 @@
 
   const selected = {
     thietbi: "",
-    hanhdog: "",
+    hanhdong: "",
     bodam: "",
     thetu: ""
   };
@@ -160,7 +160,7 @@
   function select(type, value, el) {
     const colorMap = {
       thietbi: "selected-thietbi",
-      hanhdog: value === "NHẬN" ? "selected-hanhdog-nhan" : "selected-hanhdog-tra",
+      hanhdong: value === "NHẬN" ? "selected-hanhdong-nhan" : "selected-hanhdong-tra",
       bodam: "selected-bodam",
       thetu: "selected-thetu"
     };
@@ -182,22 +182,22 @@
   function handleSubmit() {
     const nguoidung = document.getElementById("nguoidung").value;
     const thietbi = selected.thietbi;
-    const hanhdog = selected.hanhdog;
+    const hanhdong = selected.hanhdong;
     const deviceNumber = thietbi === "BỘ ĐÀM" ? selected.bodam : selected.thetu;
 
-    if (!thietbi || !hanhdog || !deviceNumber || !nguoidung) {
+    if (!thietbi || !hanhdong || !deviceNumber || !nguoidung) {
       showStatus("❌ Vui lòng điền đầy đủ thông tin!", "error");
       return;
     }
 
-    if (hanhdog === "TRẢ") {
-      checkGPS(thietbi, hanhdog, deviceNumber, nguoidung);
+    if (hanhdong === "TRẢ") {
+      checkGPS(thietbi, hanhdong, deviceNumber, nguoidung);
     } else {
-      submitData(thietbi, hanhdog, deviceNumber, nguoidung);
+      submitData(thietbi, hanhdong, deviceNumber, nguoidung);
     }
   }
 
-  function checkGPS(thietbi, hanhdog, deviceNumber, nguoidung) {
+  function checkGPS(thietbi, hanhdong, deviceNumber, nguoidung) {
     const btn = document.getElementById("btn");
     btn.disabled = true;
     btn.textContent = "Đang kiểm tra vị trí...";
@@ -213,7 +213,7 @@
       function(pos) {
         const dist = getDistance(pos.coords.latitude, pos.coords.longitude, TARGET_LAT, TARGET_LNG);
         if (dist <= MAX_DISTANCE) {
-          submitData(thietbi, hanhdog, deviceNumber, nguoidung);
+          submitData(thietbi, hanhdong, deviceNumber, nguoidung);
         } else {
           showStatus("❌ Bạn không ở đúng địa điểm! (cách " + Math.round(dist) + "m)", "error");
           resetBtn();
@@ -230,7 +230,7 @@
     );
   }
 
-  function submitData(thietbi, hanhdog, deviceNumber, nguoidung) {
+  function submitData(thietbi, hanhdong, deviceNumber, nguoidung) {
     const btn = document.getElementById("btn");
     btn.disabled = true;
     btn.textContent = "Đang gửi...";
@@ -241,7 +241,7 @@
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify({
         thietbi: thietbi,
-        hanhdog: hanhdog,
+        hanhdong: hanhdong,
         deviceNumber: deviceNumber,
         nguoidung: nguoidung
       })
