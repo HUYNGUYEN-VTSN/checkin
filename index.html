@@ -357,28 +357,42 @@
     btn.textContent = "Đang gửi...";
     showStatus("", "");
 
-fetch(WEB_APP_URL, {
-  method: "POST",
-  mode: "no-cors",
-  headers: { "Content-Type": "text/plain;charset=utf-8" },
-  body: JSON.stringify({
-    thietbi: thietbi,
-    hanhdong: hanhdong,
-    deviceNumber: deviceNumber,
-    nguoidung: nguoidung
-  })
-})
-.then(() => {
-  showStatus("✅ Xác nhận thành công!", "success");
-  btn.textContent = "✅ HOÀN TẤT";
-  setTimeout(() => location.reload(), 2000);
-})
-.catch(() => {
-  showStatus("❌ Lỗi kết nối!", "error");
-  resetBtn();
-});
-  }
+function submitData(thietbi, hanhdong, deviceNumber, nguoidung) {
 
+const btn = document.getElementById("btn");
+
+btn.disabled = true;
+btn.textContent = "Đang gửi...";
+
+showStatus("", "");
+
+fetch(WEB_APP_URL, {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify({
+thietbi,
+hanhdong,
+deviceNumber,
+nguoidung
+})
+})
+.then(res => res.text())
+.then(text => {
+console.log("Server:", text);
+showStatus("✅ Xác nhận thành công!", "success");
+btn.textContent = "✅ HOÀN TẤT";
+setTimeout(() => {
+  location.reload();
+}, 1500);
+})
+.catch(err => {
+console.error(err);
+showStatus("❌ Không gửi được dữ liệu!", "error");
+resetBtn();
+});
+}
   function getDistance(lat1, lng1, lat2, lng2) {
     const R = 6371000;
     const dLat = (lat2 - lat1) * Math.PI / 180;
