@@ -352,46 +352,49 @@
   }
 
   function submitData(thietbi, hanhdong, deviceNumber, nguoidung) {
-    const btn = document.getElementById("btn");
-    btn.disabled = true;
-    btn.textContent = "Đang gửi...";
-    showStatus("", "");
 
-function submitData(thietbi, hanhdong, deviceNumber, nguoidung) {
+  const btn = document.getElementById("btn");
 
-const btn = document.getElementById("btn");
+  btn.disabled = true;
+  btn.textContent = "Đang gửi...";
 
-btn.disabled = true;
-btn.textContent = "Đang gửi...";
+  showStatus("", "");
 
-showStatus("", "");
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      thietbi: thietbi,
+      hanhdong: hanhdong,
+      deviceNumber: deviceNumber,
+      nguoidung: nguoidung
+    })
+  })
+  .then(res => res.text())
+  .then(text => {
 
-fetch(WEB_APP_URL, {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-thietbi,
-hanhdong,
-deviceNumber,
-nguoidung
-})
-})
-.then(res => res.text())
-.then(text => {
-console.log("Server:", text);
-showStatus("✅ Xác nhận thành công!", "success");
-btn.textContent = "✅ HOÀN TẤT";
-setTimeout(() => {
-  location.reload();
-}, 1500);
-})
-.catch(err => {
-console.error(err);
-showStatus("❌ Không gửi được dữ liệu!", "error");
-resetBtn();
-});
+    console.log("Server response:", text);
+
+    showStatus("✅ Xác nhận thành công!", "success");
+
+    btn.textContent = "✅ HOÀN TẤT";
+
+    setTimeout(() => {
+      location.reload();
+    }, 1500);
+
+  })
+  .catch(err => {
+
+    console.error(err);
+
+    showStatus("❌ Không gửi được dữ liệu!", "error");
+
+    resetBtn();
+
+  });
 }
   function getDistance(lat1, lng1, lat2, lng2) {
     const R = 6371000;
