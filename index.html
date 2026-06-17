@@ -3,39 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GHI NHẬN THIẾT BỊ</title>
+
+<title>GHI NHẬN BỘ ĐÀM / THẺ TỪ</title>
 
 <style>
 
 body{
 font-family:Arial;
-padding:20px;
 background:#f5f5f5;
+padding:20px;
 }
 
 .card{
+background:white;
 max-width:500px;
 margin:auto;
-background:white;
 padding:20px;
-border-radius:12px;
+border-radius:15px;
+box-shadow:0 0 10px rgba(0,0,0,.1);
 }
 
-button{
-width:100%;
-padding:12px;
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+.label{
+font-weight:bold;
 margin-top:15px;
+margin-bottom:8px;
+}
+
+.group{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+}
+
+.btn{
+padding:10px 15px;
+border:1px solid #ccc;
+border-radius:10px;
 cursor:pointer;
+background:white;
+}
+
+.selected{
+background:#28a745;
+color:white;
+border-color:#28a745;
 }
 
 select{
 width:100%;
 padding:10px;
-margin-top:10px;
+border-radius:10px;
 }
 
-.status{
+.submit{
+width:100%;
+margin-top:20px;
+padding:14px;
+border:none;
+background:#28a745;
+color:white;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+}
+
+#status{
 margin-top:15px;
+text-align:center;
 font-weight:bold;
 }
 
@@ -46,33 +85,43 @@ font-weight:bold;
 
 <div class="card">
 
-<h2>GHI NHẬN BỘ ĐÀM / THẺ TỪ</h2>
+<h2>📻 GHI NHẬN BỘ ĐÀM / THẺ TỪ</h2>
 
-<p>THIẾT BỊ</p>
+<div class="label">THIẾT BỊ</div>
 
-<select id="thietbi" onchange="loadDevice()">
-<option value="">Chọn</option>
-<option value="BỘ ĐÀM">BỘ ĐÀM</option>
-<option value="THẺ TỪ">THẺ TỪ</option>
-</select>
+<div class="group" id="thietbi-group">
 
-<p>HÀNH ĐỘNG</p>
+<div class="btn" onclick="chon('thietbi','BỘ ĐÀM',this)">
+BỘ ĐÀM
+</div>
 
-<select id="hanhdong">
-<option value="">Chọn</option>
-<option value="NHẬN">NHẬN</option>
-<option value="TRẢ">TRẢ</option>
-</select>
+<div class="btn" onclick="chon('thietbi','THẺ TỪ',this)">
+THẺ TỪ
+</div>
 
-<p>SỐ THIẾT BỊ</p>
+</div>
 
-<select id="so"></select>
+<div class="label">HÀNH ĐỘNG</div>
 
-<p>NGƯỜI DÙNG</p>
+<div class="group" id="hanhdong-group">
+
+<div class="btn" onclick="chon('hanhdong','NHẬN',this)">
+NHẬN
+</div>
+
+<div class="btn" onclick="chon('hanhdong','TRẢ',this)">
+TRẢ
+</div>
+
+</div>
+
+<div id="so-container"></div>
+
+<div class="label">NGƯỜI DÙNG</div>
 
 <select id="nguoidung">
 
-<option value="">Chọn người dùng</option>
+<option value="">-- Chọn người dùng --</option>
 
 <option>UYÊN 3</option>
 <option>TRÍ 4</option>
@@ -80,99 +129,123 @@ font-weight:bold;
 
 </select>
 
-<button onclick="submitData()">
+<button class="submit" onclick="xacNhan()">
 XÁC NHẬN
 </button>
 
-<div id="status" class="status"></div>
+<div id="status"></div>
 
 </div>
 
 <script>
 
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8V96LAckAcaQqRe4qMxjO09rk2YsHz0_co6mJ_LhAGjujUbdBfrjc8U8DpE2Co4l_/exec";
+const WEB_APP_URL =
+"https://script.google.com/macros/s/AKfycbz4GR1PGCsWYmxK6iHRCWwa1WiqzcDzs10iiDCugPlPL3guHtPsERh7FAtUyTUaM3Us/exec";
 
 const TARGET_LAT = 10.816551;
 const TARGET_LNG = 106.663563;
-
 const MAX_DISTANCE = 50;
 
-function loadDevice(){
+let selected = {
+thietbi:"",
+hanhdong:"",
+so:""
+};
 
-const tb = document.getElementById("thietbi").value;
+function chon(type,value,el){
 
-const so = document.getElementById("so");
+document
+.querySelectorAll(
+"#"+type+"-group .btn"
+)
+.forEach(x=>x.classList.remove("selected"));
 
-so.innerHTML="";
+el.classList.add("selected");
 
-let list=[];
+selected[type]=value;
 
-if(tb==="BỘ ĐÀM"){
-list=["3","5","6","7","8","9","10","11"];
+if(type==="thietbi"){
+renderSo();
 }
 
-if(tb==="THẺ TỪ"){
-list=["6","12"];
 }
 
-list.forEach(x=>{
-let op=document.createElement("option");
-op.value=x;
-op.text=x;
-so.appendChild(op);
+function renderSo(){
+
+const box =
+document.getElementById("so-container");
+
+let html =
+'<div class="label">SỐ THIẾT BỊ</div>';
+html += '<div class="group" id="so-group">';
+
+let ds=[];
+
+if(selected.thietbi==="BỘ ĐÀM"){
+ds=[3,5,6,7,8,9,10,11];
+}
+
+if(selected.thietbi==="THẺ TỪ"){
+ds=[6,12];
+}
+
+ds.forEach(s=>{
+
+html += `
+<div class="btn"
+onclick="chonSo('${s}',this)">
+${s}
+</div>
+`;
+
 });
 
+html += "</div>";
+
+box.innerHTML = html;
+
+selected.so="";
+
 }
 
-function submitData(){
+function chonSo(so,el){
 
-const thietbi =
-document.getElementById("thietbi").value;
+document
+.querySelectorAll("#so-group .btn")
+.forEach(x=>x.classList.remove("selected"));
 
-const hanhdong =
-document.getElementById("hanhdong").value;
+el.classList.add("selected");
 
-const so =
-document.getElementById("so").value;
+selected.so=so;
+
+}
+
+function xacNhan(){
 
 const nguoidung =
 document.getElementById("nguoidung").value;
 
-if(!thietbi || !hanhdong || !so || !nguoidung){
-
-show("Vui lòng nhập đủ thông tin");
-return;
-
-}
-
-if(hanhdong==="TRẢ"){
-
-checkGPS(
-thietbi,
-hanhdong,
-so,
-nguoidung
-);
-
-}else{
-
-sendData(
-thietbi,
-hanhdong,
-so,
-nguoidung
-);
-
-}
-
-}
-
-function checkGPS(
-thietbi,
-hanhdong,
-so,
-nguoidung
+if(
+!selected.thietbi ||
+!selected.hanhdong ||
+!selected.so ||
+!nguoidung
 ){
+show("❌ Chưa nhập đủ");
+return;
+}
+
+if(selected.hanhdong==="TRẢ"){
+checkGPS(nguoidung);
+}else{
+sendData(nguoidung);
+}
+
+}
+
+function checkGPS(nguoidung){
+
+show("📍 Đang kiểm tra GPS...");
 
 navigator.geolocation.getCurrentPosition(
 
@@ -186,23 +259,14 @@ TARGET_LAT,
 TARGET_LNG
 );
 
-if(d<=50){
+if(d<=MAX_DISTANCE){
 
-sendData(
-thietbi,
-hanhdong,
-so,
-nguoidung
-);
+sendData(nguoidung);
 
 }else{
 
 show(
-"Bạn cách vị trí "
-+
-Math.round(d)
-+
-"m"
+"❌ Ngoài phạm vi 50m"
 );
 
 }
@@ -211,7 +275,7 @@ Math.round(d)
 
 function(){
 
-show("Không lấy được GPS");
+show("❌ Không lấy được GPS");
 
 },
 
@@ -223,12 +287,7 @@ enableHighAccuracy:true
 
 }
 
-function sendData(
-thietbi,
-hanhdong,
-so,
-nguoidung
-){
+function sendData(nguoidung){
 
 show("Đang gửi...");
 
@@ -237,10 +296,10 @@ WEB_APP_URL,
 {
 method:"POST",
 body:JSON.stringify({
-thietbi,
-hanhdong,
-so,
-nguoidung
+thietbi:selected.thietbi,
+hanhdong:selected.hanhdong,
+so:selected.so,
+nguoidung:nguoidung
 })
 }
 )
