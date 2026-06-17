@@ -445,8 +445,8 @@ XÁC NHẬN
 const WEB_APP_URL =
 "https://script.google.com/macros/s/AKfycbz4GR1PGCsWYmxK6iHRCWwa1WiqzcDzs10iiDCugPlPL3guHtPsERh7FAtUyTUaM3Us/exec";
 
-const TARGET_LAT = 10.816551;
-const TARGET_LNG = 106.663563;
+const TARGET_LAT = 10.816357;
+const TARGET_LNG = 106.663301;
 const MAX_DISTANCE = 50;
 
 let selected = {
@@ -596,7 +596,7 @@ if(
 !selected.so ||
 !nguoidung
 ){
-show("❌ Chưa nhập đủ");
+show("❌ Chưa nhập đủ thông tin");
 return;
 }
 
@@ -631,7 +631,7 @@ sendData(nguoidung);
 }else{
 
 show(
-"❌ Ngoài phạm vi 50m"
+"❌ Ngoài phạm vi phòng đội"
 );
 
 }
