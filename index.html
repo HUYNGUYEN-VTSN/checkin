@@ -188,7 +188,51 @@ color:#16a34a;
 .error{
 color:#dc2626;
 }
+.selected-bodam{
+background:linear-gradient(
+135deg,
+#3498db,
+#5dade2
+);
+color:white;
+}
 
+.selected-thetu{
+background:linear-gradient(
+135deg,
+#8e44ad,
+#bb6bd9
+);
+color:white;
+}
+
+.selected-nhan{
+background:linear-gradient(
+135deg,
+#1a7f4b,
+#23a55a
+);
+color:white;
+}
+
+.selected-tra{
+background:linear-gradient(
+135deg,
+#e74c3c,
+#ff6b6b
+);
+color:white;
+}
+
+.selected-so{
+background:linear-gradient(
+135deg,
+#f39c12,
+#f7b731
+);
+color:white;
+}
+  
 </style>
 </head>
 
@@ -309,22 +353,32 @@ function chon(type,value,el){
 
   if(type === "thietbi"){
 
-    document.getElementById("thietbi-group").innerHTML =
-      `<div class="btn selected"
-        onclick="chon('thietbi','${value}',this)">
-        ${value}
-      </div>`;
+const colorClass =
+  value==="BỘ ĐÀM"
+  ? "selected-bodam"
+  : "selected-thetu";
+
+document.getElementById("thietbi-group").innerHTML =
+  `<div class="btn ${colorClass}"
+    onclick="chon('thietbi','${value}',this)">
+    ${value}
+  </div>`;
 
     renderSo();
   }
 
   if(type === "hanhdong"){
 
-    document.getElementById("hanhdong-group").innerHTML =
-      `<div class="btn selected"
-        onclick="chon('hanhdong','${value}',this)">
-        ${value}
-      </div>`;
+const colorClass =
+  value==="NHẬN"
+  ? "selected-nhan"
+  : "selected-tra";
+
+document.getElementById("hanhdong-group").innerHTML =
+  `<div class="btn ${colorClass}"
+    onclick="chon('hanhdong','${value}',this)">
+    ${value}
+  </div>`;
   }
 
 }
@@ -378,11 +432,11 @@ function chonSo(so,el){
 
   selected.so = so;
 
-  document.getElementById("so-group").innerHTML =
-    `<div class="btn selected"
-      onclick="chonSo('${so}',this)">
-      ${so}
-    </div>`;
+document.getElementById("so-group").innerHTML =
+  `<div class="btn selected-so"
+    onclick="chonSo('${so}',this)">
+    ${so}
+  </div>`;
 }
 
 function xacNhan(){
