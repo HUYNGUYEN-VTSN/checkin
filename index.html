@@ -179,16 +179,18 @@ so:""
 
 function chon(type,value,el){
 
-selected[type]=value;
+  selected[type]=value;
 
-const parent = el.parentElement;
+  const parent = el.parentElement;
 
-parent.innerHTML =
-`<div class="btn selected">${value}</div>`;
+  parent.querySelectorAll(".btn")
+    .forEach(btn=>btn.classList.remove("selected"));
 
-if(type==="thietbi"){
-renderSo();
-}
+  el.classList.add("selected");
+
+  if(type==="thietbi"){
+    renderSo();
+  }
 
 }
 
@@ -233,10 +235,13 @@ selected.so="";
 
 function chonSo(so,el){
 
-selected.so=so;
+  selected.so=so;
 
-document.getElementById("so-group").innerHTML=
-`<div class="btn selected">${so}</div>`;
+  document
+    .querySelectorAll("#so-group .btn")
+    .forEach(btn=>btn.classList.remove("selected"));
+
+  el.classList.add("selected");
 
 }
 
