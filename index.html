@@ -8,74 +8,99 @@
 
 <style>
 
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
 body{
-font-family:Arial;
-background:#f5f5f5;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+background:#edf2f7;
 padding:20px;
 }
 
 .card{
-background:white;
-max-width:500px;
+max-width:520px;
 margin:auto;
-padding:20px;
-border-radius:15px;
-box-shadow:0 0 10px rgba(0,0,0,.1);
+background:white;
+border-radius:24px;
+padding:24px;
+box-shadow:0 10px 30px rgba(0,0,0,.12);
 }
 
 h2{
 text-align:center;
-margin-bottom:20px;
+color:#1a7f4b;
+margin-bottom:25px;
+font-size:24px;
 }
 
 .label{
-font-weight:bold;
-margin-top:15px;
-margin-bottom:8px;
+margin-top:18px;
+margin-bottom:10px;
+font-weight:700;
+font-size:15px;
+color:#c0392b;
 }
 
 .group{
 display:flex;
 flex-wrap:wrap;
-gap:8px;
+gap:10px;
 }
 
 .btn{
-padding:10px 15px;
-border:1px solid #ccc;
-border-radius:10px;
+padding:14px 18px;
+border-radius:14px;
+border:none;
 cursor:pointer;
-background:white;
+font-weight:700;
+font-size:15px;
+transition:.2s;
+background:#f1f3f5;
+}
+
+.btn:hover{
+transform:translateY(-2px);
 }
 
 .selected{
-background:#28a745;
+background:#1a7f4b;
 color:white;
-border-color:#28a745;
 }
 
 select{
 width:100%;
-padding:10px;
-border-radius:10px;
+padding:14px;
+border-radius:14px;
+border:1px solid #d0d7de;
+font-size:15px;
+background:white;
 }
 
 .submit{
 width:100%;
-margin-top:20px;
-padding:14px;
+margin-top:25px;
+padding:16px;
 border:none;
-background:#28a745;
+border-radius:16px;
+background:#1a7f4b;
 color:white;
-border-radius:10px;
 font-size:16px;
+font-weight:bold;
 cursor:pointer;
 }
 
+.submit:hover{
+opacity:.9;
+}
+
 #status{
-margin-top:15px;
+margin-top:16px;
 text-align:center;
 font-weight:bold;
+min-height:20px;
 }
 
 </style>
@@ -154,15 +179,12 @@ so:""
 
 function chon(type,value,el){
 
-document
-.querySelectorAll(
-"#"+type+"-group .btn"
-)
-.forEach(x=>x.classList.remove("selected"));
-
-el.classList.add("selected");
-
 selected[type]=value;
+
+const parent = el.parentElement;
+
+parent.innerHTML =
+`<div class="btn selected">${value}</div>`;
 
 if(type==="thietbi"){
 renderSo();
@@ -175,10 +197,6 @@ function renderSo(){
 const box =
 document.getElementById("so-container");
 
-let html =
-'<div class="label">SỐ THIẾT BỊ</div>';
-html += '<div class="group" id="so-group">';
-
 let ds=[];
 
 if(selected.thietbi==="BỘ ĐÀM"){
@@ -189,10 +207,15 @@ if(selected.thietbi==="THẺ TỪ"){
 ds=[6,12];
 }
 
+let html=
+'<div class="label">SỐ THIẾT BỊ</div>';
+html+='<div class="group" id="so-group">';
+
 ds.forEach(s=>{
 
-html += `
-<div class="btn"
+html+=`
+<div
+class="btn"
 onclick="chonSo('${s}',this)">
 ${s}
 </div>
@@ -200,9 +223,9 @@ ${s}
 
 });
 
-html += "</div>";
+html+='</div>';
 
-box.innerHTML = html;
+box.innerHTML=html;
 
 selected.so="";
 
@@ -210,13 +233,10 @@ selected.so="";
 
 function chonSo(so,el){
 
-document
-.querySelectorAll("#so-group .btn")
-.forEach(x=>x.classList.remove("selected"));
-
-el.classList.add("selected");
-
 selected.so=so;
+
+document.getElementById("so-group").innerHTML=
+`<div class="btn selected">${so}</div>`;
 
 }
 
