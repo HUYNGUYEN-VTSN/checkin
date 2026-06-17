@@ -179,12 +179,27 @@ so:""
 
 function chon(type,value,el){
 
-  selected[type]=value;
+  // nếu bấm lại đúng cái đang chọn
+  if(selected[type] === value){
+
+    selected[type] = "";
+
+    el.classList.remove("selected");
+
+    if(type === "thietbi"){
+      document.getElementById("so-container").innerHTML="";
+      selected.so="";
+    }
+
+    return;
+  }
+
+  selected[type] = value;
 
   const parent = el.parentElement;
 
   parent.querySelectorAll(".btn")
-    .forEach(btn=>btn.classList.remove("selected"));
+    .forEach(btn => btn.classList.remove("selected"));
 
   el.classList.add("selected");
 
@@ -235,11 +250,20 @@ selected.so="";
 
 function chonSo(so,el){
 
-  selected.so=so;
+  if(selected.so === so){
+
+    selected.so = "";
+
+    el.classList.remove("selected");
+
+    return;
+  }
+
+  selected.so = so;
 
   document
     .querySelectorAll("#so-group .btn")
-    .forEach(btn=>btn.classList.remove("selected"));
+    .forEach(btn => btn.classList.remove("selected"));
 
   el.classList.add("selected");
 
