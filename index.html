@@ -30,6 +30,7 @@ body{
 }
 
 .card{
+  position:relative;
   width:100%;
   max-width:540px;
   background:white;
@@ -38,6 +39,7 @@ body{
   box-shadow:
     0 25px 50px rgba(0,0,0,.08),
     0 10px 20px rgba(0,0,0,.05);
+  overflow:hidden;
 }
   
 .card::before{
@@ -196,6 +198,12 @@ transform:translateY(-2px);
 transform:scale(.98);
 }
 
+.submit:disabled{
+opacity:.6;
+cursor:not-allowed;
+transform:none;
+}
+
 #status{
 margin-top:18px;
 text-align:center;
@@ -300,8 +308,6 @@ TRẢ
 <div class="label">NGƯỜI DÙNG</div>
 
 <select id="nguoidung">
-
-<option value=""
   <option value="">-- Chọn tên --</option>
   <option>UYÊN 3</option>
   <option>HẰNG 6</option>
@@ -432,7 +438,7 @@ TRẢ
   <option>TRÍ 4</option>
 </select>
 
-<button class="submit" onclick="xacNhan()">
+<button class="submit" id="submitBtn" onclick="xacNhan()">
 XÁC NHẬN
 </button>
 
@@ -596,93 +602,129 @@ if(
 !selected.so ||
 !nguoidung
 ){
-show("❌ Chưa nhập đủ thông tin");
+show("❌ Chưa nhập đủ thông tin","error");
 return;
 }
+
+setSubmitting(true);
 
 if(selected.hanhdong==="TRẢ"){
 checkGPS(nguoidung);
 }else{
-sendData(nguoidung);
+sendData(nguoidung,null,null);
 }
 
 }
 
 function checkGPS(nguoidung){
 
-show("📍 Đang kiểm tra GPS...");
+show("📍 Đang kiểm tra GPS...","");
 
 navigator.geolocation.getCurrentPosition(
 
 function(pos){
 
-const d =
-distance(
-pos.coords.latitude,
-pos.coords.longitude,
-TARGET_LAT,
-TARGET_LNG
-);
+const lat = pos.coords.latitude;
+const lng = pos.coords.longitude;
 
-if(d<=MAX_DISTANCE){
+const d = distance(lat,lng,TARGET_LAT,TARGET_LNG);
 
-sendData(nguoidung);
-
-}else{
+if(d>MAX_DISTANCE){
 
 show(
-"❌ Ngoài phạm vi phòng đội"
+"❌ Ngoài phạm vi phòng đội (cách "+Math.round(d)+"m)","error"
 );
+setSubmitting(false);
+return;
 
 }
 
+sendData(nguoidung,lat,lng);
+
 },
 
-function(){
+function(err){
 
-show("❌ Không lấy được GPS");
+let msg = "❌ Không lấy được GPS";
+
+if(err && err.code === 1){
+  msg = "❌ Bạn chưa cho phép truy cập vị trí";
+}else if(err && err.code === 2){
+  msg = "❌ Không xác định được vị trí";
+}else if(err && err.code === 3){
+  msg = "❌ Lấy GPS quá thời gian, thử lại";
+}
+
+show(msg,"error");
+setSubmitting(false);
 
 },
 
 {
-enableHighAccuracy:true
+enableHighAccuracy:true,
+timeout:15000
 }
 
 );
 
 }
 
-function sendData(nguoidung){
+function sendData(nguoidung,lat,lng){
 
-show("Đang gửi...");
+show("Đang gửi...","");
 
 fetch(
 WEB_APP_URL,
 {
 method:"POST",
+headers:{
+"Content-Type":"text/plain;charset=utf-8"
+},
 body:JSON.stringify({
 thietbi:selected.thietbi,
 hanhdong:selected.hanhdong,
 so:selected.so,
-nguoidung:nguoidung
+nguoidung:nguoidung,
+lat:lat,
+lng:lng
 })
 }
 )
-.then(()=>{
+.then(function(res){
+  if(!res.ok){
+    throw new Error("HTTP "+res.status);
+  }
+  return res.text();
+})
+.then(function(text){
 
-show("✅ Thành công");
+  let data = null;
+  try{ data = JSON.parse(text); }catch(e){}
 
-setTimeout(()=>{
-location.reload();
-},1500);
+  if(data && data.success === false){
+    show("❌ "+(data.message || "Lỗi từ máy chủ"),"error");
+    setSubmitting(false);
+    return;
+  }
+
+  show("✅ Thành công","success");
+
+  setTimeout(()=>{
+  location.reload();
+  },1500);
 
 })
 .catch(()=>{
 
-show("❌ Lỗi gửi dữ liệu");
+show("❌ Lỗi gửi dữ liệu, kiểm tra mạng và thử lại","error");
+setSubmitting(false);
 
 });
 
+}
+
+function setSubmitting(isSubmitting){
+  document.getElementById("submitBtn").disabled = isSubmitting;
 }
 
 function distance(
@@ -713,9 +755,11 @@ Math.sqrt(1-a)
 
 }
 
-function show(msg){
+function show(msg,cls){
 
-document.getElementById("status").innerText=msg;
+const el = document.getElementById("status");
+el.innerText=msg;
+el.className = cls || "";
 
 }
 
