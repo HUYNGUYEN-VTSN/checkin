@@ -168,6 +168,93 @@ box-shadow:
 0 0 0 5px rgba(35,165,90,.15);
 }
 
+#user-search-wrap{
+position:relative;
+}
+
+#user-search-input{
+width:100%;
+padding:16px 18px;
+border-radius:18px;
+border:2px solid #e2e8f0;
+font-size:15px;
+font-weight:600;
+background:#f8fafc;
+outline:none;
+transition:.25s;
+color:#2d3748;
+}
+
+#user-search-input:hover{
+border-color:#23a55a;
+background:#ffffff;
+}
+
+#user-search-input:focus{
+border-color:#23a55a;
+background:#ffffff;
+box-shadow:
+0 0 0 5px rgba(35,165,90,.15);
+}
+
+#user-search-input.has-value{
+border-color:#1a7f4b;
+background:#eef9f1;
+color:#1a7f4b;
+font-weight:800;
+}
+
+#user-dropdown{
+position:absolute;
+top:calc(100% + 6px);
+left:0;
+right:0;
+max-height:260px;
+overflow-y:auto;
+background:white;
+border:2px solid #e2e8f0;
+border-radius:18px;
+box-shadow:0 15px 30px rgba(0,0,0,.12);
+z-index:10;
+display:none;
+}
+
+#user-dropdown.open{
+display:block;
+}
+
+.user-option{
+padding:14px 18px;
+font-size:15px;
+font-weight:600;
+color:#2d3748;
+cursor:pointer;
+border-bottom:1px solid #f1f5f9;
+}
+
+.user-option:last-child{
+border-bottom:none;
+}
+
+.user-option:hover,
+.user-option.active{
+background:#eef9f1;
+color:#1a7f4b;
+}
+
+.user-option-empty{
+padding:14px 18px;
+font-size:14px;
+color:#a0aec0;
+text-align:center;
+}
+
+.user-option mark{
+background:transparent;
+color:#1a7f4b;
+font-weight:800;
+}
+
 .submit{
 width:100%;
 margin-top:28px;
@@ -307,7 +394,17 @@ TRẢ
 
 <div class="label">NGƯỜI DÙNG</div>
 
-<select id="nguoidung">
+<div id="user-search-wrap">
+<input
+  type="text"
+  id="user-search-input"
+  placeholder="Gõ để tìm tên..."
+  autocomplete="off"
+/>
+<div id="user-dropdown"></div>
+</div>
+
+<select id="nguoidung" style="display:none">
   <option value="">-- Chọn tên --</option>
   <option>UYÊN 3</option>
   <option>HẰNG 6</option>
@@ -460,6 +557,117 @@ thietbi:"",
 hanhdong:"",
 so:""
 };
+
+// ===== Tìm kiếm tên người dùng =====
+
+const userSelectEl = document.getElementById("nguoidung");
+const userInputEl = document.getElementById("user-search-input");
+const userDropdownEl = document.getElementById("user-dropdown");
+
+// Lấy danh sách tên từ <select> gốc (bỏ option rỗng đầu tiên)
+const danhSachNguoiDung = Array.from(userSelectEl.options)
+  .map(o => o.value)
+  .filter(v => v !== "");
+
+let userActiveIndex = -1;
+let userFilteredList = [];
+
+function highlightMatch(text, query){
+  if(!query) return text;
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if(idx === -1) return text;
+  return (
+    text.slice(0,idx) +
+    "<mark>" + text.slice(idx, idx+query.length) + "</mark>" +
+    text.slice(idx+query.length)
+  );
+}
+
+function renderUserDropdown(query){
+
+  const q = query.trim().toLowerCase();
+
+  userFilteredList = q === ""
+    ? danhSachNguoiDung
+    : danhSachNguoiDung.filter(name => name.toLowerCase().includes(q));
+
+  userActiveIndex = -1;
+
+  if(userFilteredList.length === 0){
+    userDropdownEl.innerHTML =
+      '<div class="user-option-empty">Không tìm thấy tên nào</div>';
+  }else{
+    userDropdownEl.innerHTML = userFilteredList.map((name,i)=>
+      `<div class="user-option" data-index="${i}" onclick="chonNguoiDung('${name.replace(/'/g,"\\'")}')">${highlightMatch(name,query)}</div>`
+    ).join("");
+  }
+
+  userDropdownEl.classList.add("open");
+}
+
+function chonNguoiDung(name){
+  userSelectEl.value = name;
+  userInputEl.value = name;
+  userInputEl.classList.add("has-value");
+  userDropdownEl.classList.remove("open");
+}
+
+userInputEl.addEventListener("input", function(){
+  // Gõ lại nghĩa là chưa chắc tên đã chọn còn đúng, xóa value cũ
+  userSelectEl.value = "";
+  userInputEl.classList.remove("has-value");
+  renderUserDropdown(userInputEl.value);
+});
+
+userInputEl.addEventListener("focus", function(){
+  renderUserDropdown(userInputEl.value);
+});
+
+userInputEl.addEventListener("blur", function(){
+  // Để kịp xử lý click chọn item trước khi đóng dropdown
+  setTimeout(()=>{
+    userDropdownEl.classList.remove("open");
+    // Nếu rời khỏi ô mà chưa chọn tên hợp lệ nào, xóa trắng để tránh nhầm
+    if(userSelectEl.value === ""){
+      userInputEl.value = "";
+    }
+  },150);
+});
+
+userInputEl.addEventListener("keydown", function(e){
+
+  if(!userDropdownEl.classList.contains("open")) return;
+
+  const items = userDropdownEl.querySelectorAll(".user-option");
+  if(items.length === 0) return;
+
+  if(e.key === "ArrowDown"){
+    e.preventDefault();
+    userActiveIndex = Math.min(userActiveIndex+1, items.length-1);
+    updateActiveItem(items);
+  }else if(e.key === "ArrowUp"){
+    e.preventDefault();
+    userActiveIndex = Math.max(userActiveIndex-1, 0);
+    updateActiveItem(items);
+  }else if(e.key === "Enter"){
+    e.preventDefault();
+    if(userActiveIndex >= 0 && userFilteredList[userActiveIndex]){
+      chonNguoiDung(userFilteredList[userActiveIndex]);
+    }
+  }else if(e.key === "Escape"){
+    userDropdownEl.classList.remove("open");
+  }
+
+});
+
+function updateActiveItem(items){
+  items.forEach((it,i)=>{
+    it.classList.toggle("active", i===userActiveIndex);
+  });
+  if(items[userActiveIndex]){
+    items[userActiveIndex].scrollIntoView({block:"nearest"});
+  }
+}
 
 function chon(type,value,el){
 
