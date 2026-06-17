@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>GHI NHẬN BỘ ĐÀM / THẺ TỪ</title>
+<title>BỘ ĐÀM / THẺ TỪ</title>
 
 <style>
 
@@ -16,31 +16,39 @@ padding:0;
 
 body{
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-background:#edf2f7;
+background:linear-gradient(
+135deg,
+#eef7f1 0%,
+#f7fafc 100%
+);
 padding:20px;
+min-height:100vh;
 }
 
 .card{
-max-width:520px;
+max-width:540px;
 margin:auto;
 background:white;
-border-radius:24px;
-padding:24px;
-box-shadow:0 10px 30px rgba(0,0,0,.12);
+border-radius:28px;
+padding:28px;
+box-shadow:
+0 25px 50px rgba(0,0,0,.08),
+0 10px 20px rgba(0,0,0,.05);
 }
 
 h2{
 text-align:center;
-color:#1a7f4b;
+font-size:28px;
 margin-bottom:25px;
-font-size:24px;
+color:#1a7f4b;
 }
 
 .label{
-margin-top:18px;
-margin-bottom:10px;
+margin-top:22px;
+margin-bottom:12px;
 font-weight:700;
-font-size:15px;
+font-size:14px;
+letter-spacing:.8px;
 color:#c0392b;
 }
 
@@ -51,56 +59,107 @@ gap:10px;
 }
 
 .btn{
-padding:14px 18px;
-border-radius:14px;
-border:none;
+padding:14px 20px;
+border-radius:999px;
 cursor:pointer;
 font-weight:700;
 font-size:15px;
-transition:.2s;
-background:#f1f3f5;
+transition:.25s;
+background:#f8f9fa;
+border:2px solid transparent;
+user-select:none;
 }
 
 .btn:hover{
 transform:translateY(-2px);
+background:#edf7f0;
+}
+
+.btn:active{
+transform:scale(.96);
 }
 
 .selected{
-background:#1a7f4b;
+background:linear-gradient(
+135deg,
+#1a7f4b,
+#23a55a
+);
 color:white;
+border-color:#1a7f4b;
+box-shadow:
+0 6px 18px rgba(26,127,75,.35);
 }
 
 select{
 width:100%;
-padding:14px;
-border-radius:14px;
-border:1px solid #d0d7de;
+padding:15px;
+border-radius:16px;
+border:2px solid #e2e8f0;
 font-size:15px;
 background:white;
+outline:none;
+transition:.2s;
+}
+
+select:focus{
+border-color:#1a7f4b;
+box-shadow:0 0 0 4px rgba(26,127,75,.12);
 }
 
 .submit{
 width:100%;
-margin-top:25px;
-padding:16px;
+margin-top:28px;
+padding:18px;
 border:none;
-border-radius:16px;
-background:#1a7f4b;
+border-radius:18px;
+background:linear-gradient(
+135deg,
+#1a7f4b,
+#23a55a
+);
 color:white;
-font-size:16px;
-font-weight:bold;
+font-size:17px;
+font-weight:700;
 cursor:pointer;
+transition:.25s;
+box-shadow:
+0 8px 20px rgba(26,127,75,.25);
 }
 
 .submit:hover{
-opacity:.9;
+transform:translateY(-2px);
+}
+
+.submit:active{
+transform:scale(.98);
 }
 
 #status{
-margin-top:16px;
+margin-top:18px;
 text-align:center;
-font-weight:bold;
-min-height:20px;
+font-weight:700;
+font-size:15px;
+min-height:24px;
+}
+
+#so-container{
+margin-top:8px;
+padding-top:4px;
+}
+
+.card::before{
+content:"";
+display:block;
+height:5px;
+width:80px;
+margin:0 auto 20px;
+border-radius:999px;
+background:linear-gradient(
+90deg,
+#1a7f4b,
+#23a55a
+);
 }
 
 </style>
@@ -110,7 +169,19 @@ min-height:20px;
 
 <div class="card">
 
-<h2>📻 GHI NHẬN BỘ ĐÀM / THẺ TỪ</h2>
+<h2>
+📻 GHI NHẬN THIẾT BỊ
+</h2>
+
+<div style="
+text-align:center;
+margin-top:-15px;
+margin-bottom:20px;
+color:#718096;
+font-size:14px;
+">
+Bộ đàm & Thẻ từ
+</div>
 
 <div class="label">THIẾT BỊ</div>
 
