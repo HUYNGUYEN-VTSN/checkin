@@ -255,38 +255,7 @@ background:linear-gradient(
 );
 color:white;
 }
-
-  .fake-options{
-display:none;
-flex-direction:column;
-gap:8px;
-margin-top:10px;
-}
-
-.fake-options input{
-padding:12px 14px;
-border-radius:14px;
-border:2px solid #e2e8f0;
-outline:none;
-font-size:14px;
-font-weight:600;
-}
   
-.user-item{
-padding:12px 14px;
-border-radius:14px;
-background:#f8fafc;
-border:2px solid #e2e8f0;
-cursor:pointer;
-font-weight:700;
-transition:.2s;
-}
-
-.user-item:hover{
-background:#e8f5e9;
-border-color:#1a7f4b;
-transform:translateY(-2px);
-}
 </style>
 </head>
 
@@ -329,26 +298,139 @@ TRẢ
 <div id="so-container"></div>
 
 <div class="label">NGƯỜI DÙNG</div>
-<div class="fake-select">
-<div class="fake-selected" onclick="toggleUser()">
-    👤 Chọn người dùng
-  </div>
 
-  <div class="fake-options" id="user-options">
+<select id="nguoidung">
 
-    <!-- SEARCH BOX -->
-    <input 
-      type="text" 
-      id="user-search" 
-      placeholder="🔎 Tìm tên..."
-      oninput="filterUser()"
-    />
-    <!-- LIST -->
-    <div class="user-item" onclick="chonUser('UYÊN 3')">UYÊN 3</div>
-    <div class="user-item" onclick="chonUser('TRÍ 4')">TRÍ 4</div>
-    <div class="user-item" onclick="chonUser('HOÀNG 3')">HOÀNG 3</div>
- </div>
-</div>
+<option value=""
+  <option value="">-- Chọn tên --</option>
+  <option>UYÊN 3</option>
+  <option>HẰNG 6</option>
+  <option>TUYỀN 4</option>
+  <option>TRƯỜNG 3</option>
+  <option>TRANG 16</option>
+  <option>QUỲNH 6</option>
+  <option>HƯƠNG 6</option>
+  <option>THU 15</option>
+  <option>DUNG 6</option>
+  <option>LOAN 3</option>
+  <option>HUY 7</option>
+  <option>VY 15</option>
+  <option>YẾN 7</option>
+  <option>NGÂN 15</option>
+  <option>TIẾN 6</option>
+  <option>TRANG 45</option>
+  <option>HÂN 4</option>
+  <option>CHI 2</option>
+  <option>YẾN 5</option>
+  <option>TÂM 4</option>
+  <option>YÊN 2</option>
+  <option>NGỌC 18</option>
+  <option>MINH 11</option>
+  <option>HẠNH 8</option>
+  <option>HẢO 1</option>
+  <option>THẢO 27</option>
+  <option>THÚY 3</option>
+  <option>LOAN 4</option>
+  <option>MỴ 3</option>
+  <option>HƯỜNG 15</option>
+  <option>THỦY 17</option>
+  <option>TIẾN 8</option>
+  <option>ÂN 6</option>
+  <option>BẢY 7</option>
+  <option>VÂN 1</option>
+  <option>LINH 18</option>
+  <option>HẰNG 11</option>
+  <option>THỦY 22</option>
+  <option>ANH 52</option>
+  <option>PHƯỢNG 27</option>
+  <option>CHÂU 4</option>
+  <option>TRANG 41</option>
+  <option>HIỀN 4</option>
+  <option>ANH 54</option>
+  <option>TRỌNG 1</option>
+  <option>ANH 62</option>
+  <option>NHẬT 1</option>
+  <option>TÌNH 1</option>
+  <option>HỒNG 7</option>
+  <option>DUY 5</option>
+  <option>THI 1</option>
+  <option>THÀNH 12</option>
+  <option>HÀ 2</option>
+  <option>DUYÊN1</option>
+  <option>HIỀN 5</option>
+  <option>DUY 6</option>
+  <option>LAN 5</option>
+  <option>MAI 5</option>
+  <option>ĐOAN 1</option>
+  <option>TÀI 1</option>
+  <option>KHÁNH 4</option>
+  <option>KHOA 2</option>
+  <option>PHƯƠNG 31</option>
+  <option>LY 6</option>
+  <option>LỘC 2</option>
+  <option>ANH 63</option>
+  <option>NGỌC 24</option>
+  <option>THỦY 24</option>
+  <option>OANH 7</option>
+  <option>DUYÊN 8</option>
+  <option>KHÁNH 3</option>
+  <option>ANH 64</option>
+  <option>DƯƠNG 1</option>
+  <option>THÙY 1</option>
+  <option>TRÚC 8</option>
+  <option>VIỆT 1</option>
+  <option>NHÃ 1</option>
+  <option>THƯ 1</option>
+  <option>NGÂN 16</option>
+  <option>THY 5</option>
+  <option>VÀNG 1</option>
+  <option>TÂM 5</option>
+  <option>TRANG 26</option>
+  <option>THẢO 9</option>
+  <option>DUYÊN 9</option>
+  <option>BĂNG 1</option>
+  <option>CHÂU 5</option>
+  <option>THƯ 18</option>
+  <option>MY 2</option>
+  <option>LINH 19</option>
+  <option>THU 20</option>
+  <option>THƯ 19</option>
+  <option>THẢO 10</option>
+  <option>VÂN 3</option>
+  <option>DŨNG</option>
+  <option>TUYẾT</option>
+  <option>SONG</option>
+  <option>ÁNH</option>
+  <option>HÒA</option>
+  <option>NHU</option>
+  <option>AN</option>
+  <option>TRINH</option>
+  <option>HÀ</option>
+  <option>THU</option>
+  <option>MINH</option>
+  <option>HUY 4</option>
+  <option>YẾN 4</option>
+  <option>LINH 2</option>
+  <option>TRÚC 7</option>
+  <option>MINH 3</option>
+  <option>HIẾU 4</option>
+  <option>HOÀNG 3</option>
+  <option>QUÂN</option>
+  <option>SANG</option>
+  <option>LINH 7</option>
+  <option>PHƯƠNG 12</option>
+  <option>THANH 6</option>
+  <option>TUẤN 5</option>
+  <option>HƯƠNG 11</option>
+  <option>TRANG 25</option>
+  <option>THẢO 8</option>
+  <option>HẰNG 10</option>
+  <option>HẰNG 5</option>
+  <option>THỦY 23</option>
+  <option>KHOA 1</option>
+  <option>KHÁNH 2</option>
+  <option>TRÍ 4</option>
+</select>
 
 <button class="submit" onclick="xacNhan()">
 XÁC NHẬN
@@ -505,23 +587,23 @@ document.getElementById("so-group").innerHTML =
 
 function xacNhan(){
 
-  const nguoidung = selectedUser;
+const nguoidung =
+document.getElementById("nguoidung").value;
 
-  if(
-    !selected.thietbi ||
-    !selected.hanhdong ||
-    !selected.so ||
-    !nguoidung
-  ){
-    show("❌ Chưa nhập đủ thông tin");
-    return;
-  }
+if(
+!selected.thietbi ||
+!selected.hanhdong ||
+!selected.so ||
+!nguoidung
+){
+show("❌ Chưa nhập đủ thông tin");
+return;
+}
 
-  if(selected.hanhdong === "TRẢ"){
-    checkGPS(nguoidung);
-  } else {
-    sendData(nguoidung);
-  }
+if(selected.hanhdong==="TRẢ"){
+checkGPS(nguoidung);
+}else{
+sendData(nguoidung);
 }
 
 }
@@ -572,32 +654,34 @@ enableHighAccuracy:true
 
 function sendData(nguoidung){
 
-  show("Đang gửi...");
+show("Đang gửi...");
 
-  fetch(WEB_APP_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      thietbi: selected.thietbi,
-      hanhdong: selected.hanhdong,
-      so: selected.so,
-      nguoidung: nguoidung
-    })
-  })
-  .then(()=>{
+fetch(
+WEB_APP_URL,
+{
+method:"POST",
+body:JSON.stringify({
+thietbi:selected.thietbi,
+hanhdong:selected.hanhdong,
+so:selected.so,
+nguoidung:nguoidung
+})
+}
+)
+.then(()=>{
 
-    show("✅ Thành công");
+show("✅ Thành công");
 
-    setTimeout(()=>{
-      location.reload();
-    },1500);
+setTimeout(()=>{
+location.reload();
+},1500);
 
-  })
-  .catch(()=>{
-    show("❌ Lỗi gửi dữ liệu");
-  });
+})
+.catch(()=>{
+
+show("❌ Lỗi gửi dữ liệu");
+
+});
 
 }
 
@@ -635,37 +719,6 @@ document.getElementById("status").innerText=msg;
 
 }
 
-let selectedUser = "";
-
-function toggleUser(){
-  const box = document.getElementById("user-options");
-  box.style.display = box.style.display === "flex" ? "none" : "flex";
-}
-
-function chonUser(name){
-  selectedUser = name;
-
-  document.querySelector(".fake-selected").innerHTML =
-    "👤 " + name;
-
-  document.getElementById("user-options").style.display = "none";
-}
-
-function filterUser(){
-  const input = document.getElementById("user-search").value.toLowerCase();
-  const items = document.querySelectorAll(".user-item");
-
-  items.forEach(item => {
-    const text = item.textContent.toLowerCase();
-
-    if(text.includes(input)){
-      item.style.display = "block";
-    } else {
-      item.style.display = "none";
-    }
-  });
-}
-  
 </script>
 
 </body>
