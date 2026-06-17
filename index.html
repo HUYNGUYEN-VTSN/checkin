@@ -179,16 +179,39 @@ so:""
 
 function chon(type,value,el){
 
-  // nếu bấm lại đúng cái đang chọn
+  // bấm lại chính nó => reset
   if(selected[type] === value){
 
     selected[type] = "";
 
-    el.classList.remove("selected");
-
     if(type === "thietbi"){
+
+      document.getElementById("thietbi-group").innerHTML = `
+        <div class="btn" onclick="chon('thietbi','BỘ ĐÀM',this)">
+          BỘ ĐÀM
+        </div>
+
+        <div class="btn" onclick="chon('thietbi','THẺ TỪ',this)">
+          THẺ TỪ
+        </div>
+      `;
+
       document.getElementById("so-container").innerHTML="";
       selected.so="";
+
+    }
+
+    if(type === "hanhdong"){
+
+      document.getElementById("hanhdong-group").innerHTML = `
+        <div class="btn" onclick="chon('hanhdong','NHẬN',this)">
+          NHẬN
+        </div>
+
+        <div class="btn" onclick="chon('hanhdong','TRẢ',this)">
+          TRẢ
+        </div>
+      `;
     }
 
     return;
@@ -196,19 +219,27 @@ function chon(type,value,el){
 
   selected[type] = value;
 
-  const parent = el.parentElement;
+  if(type === "thietbi"){
 
-  parent.querySelectorAll(".btn")
-    .forEach(btn => btn.classList.remove("selected"));
+    document.getElementById("thietbi-group").innerHTML =
+      `<div class="btn selected"
+        onclick="chon('thietbi','${value}',this)">
+        ${value}
+      </div>`;
 
-  el.classList.add("selected");
-
-  if(type==="thietbi"){
     renderSo();
   }
 
-}
+  if(type === "hanhdong"){
 
+    document.getElementById("hanhdong-group").innerHTML =
+      `<div class="btn selected"
+        onclick="chon('hanhdong','${value}',this)">
+        ${value}
+      </div>`;
+  }
+
+}
 function renderSo(){
 
 const box =
@@ -253,20 +284,17 @@ function chonSo(so,el){
   if(selected.so === so){
 
     selected.so = "";
-
-    el.classList.remove("selected");
-
+    renderSo();
     return;
   }
 
   selected.so = so;
 
-  document
-    .querySelectorAll("#so-group .btn")
-    .forEach(btn => btn.classList.remove("selected"));
-
-  el.classList.add("selected");
-
+  document.getElementById("so-group").innerHTML =
+    `<div class="btn selected"
+      onclick="chonSo('${so}',this)">
+      ${so}
+    </div>`;
 }
 
 function xacNhan(){
