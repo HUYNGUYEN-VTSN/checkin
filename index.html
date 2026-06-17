@@ -1,422 +1,301 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NHẬN / TRẢ THIẾT BỊ</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .card {
-      background: white;
-      border-radius: 16px;
-      padding: 30px 20px;
-      max-width: 420px;
-      margin: 0 auto;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      color: #1a7f4b;
-      font-size: 22px;
-      margin-bottom: 24px;
-    }
-.label {
-  font-weight: bold;
-  color: #c0392b;
-  font-size: 16px;
-  margin-bottom: 8px;
-  margin-top: 16px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GHI NHẬN THIẾT BỊ</title>
+
+<style>
+
+body{
+font-family:Arial;
+padding:20px;
+background:#f5f5f5;
 }
-    .options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-    .opt {
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: 2px solid #ddd;
-      cursor: pointer;
-      font-size: 14px;
-      background: white;
-      transition: all 0.2s;
-    }
-    .opt.selected-thietbi { background: #e8f5e9; border-color: #1a7f4b; color: #1a7f4b; font-weight: bold; }
-.opt.selected-hanhdong-nhan { background: #fff9c4; border-color: #f1c40f; color: #7d6608; font-weight: bold; }
-.opt.selected-hanhdong-tra { background: #f3e8ff; border-color: #9b59b6; color: #6c3483; font-weight: bold; }
-    .opt.selected-bodam { background: #e8f0ff; border-color: #3498db; color: #1a5276; font-weight: bold; }
-    .opt.selected-thetu { background: #fce8ff; border-color: #e91e8c; color: #880e4f; font-weight: bold; }
-    select {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 2px solid #ddd;
-      font-size: 15px;
-      margin-top: 4px;
-      background: white;
-    }
-    .btn-submit {
-      margin-top: 28px;
-      width: 100%;
-      padding: 16px;
-      background: #1a7f4b;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      letter-spacing: 1px;
-    }
-    .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
-    .status {
-      margin-top: 16px;
-      text-align: center;
-      font-size: 14px;
-      min-height: 20px;
-    }
-    .error { color: #ff3b30; }
-    .success { color: #34c759; }
-    #section-bodam, #section-thetu { display: none; }
-  </style>
+
+.card{
+max-width:500px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:12px;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:15px;
+cursor:pointer;
+}
+
+select{
+width:100%;
+padding:10px;
+margin-top:10px;
+}
+
+.status{
+margin-top:15px;
+font-weight:bold;
+}
+
+</style>
 </head>
+
 <body>
+
 <div class="card">
-  <h2>🎙️ BỘ ĐÀM / THẺ TỪ</h2>
 
-  <!-- THIẾT BỊ -->
-  <div class="label">THIẾT BỊ *</div>
-  <div class="options" id="opts-thietbi">
-    <div class="opt" onclick="select('thietbi', 'BỘ ĐÀM', this)">BỘ ĐÀM</div>
-    <div class="opt" onclick="select('thietbi', 'THẺ TỪ', this)">THẺ TỪ</div>
-  </div>
+<h2>GHI NHẬN BỘ ĐÀM / THẺ TỪ</h2>
 
-  <!-- HÀNH ĐỘNG -->
-  <div class="label">HÀNH ĐỘNG *</div>
-  <div class="options" id="opts-hanhdong">
-    <div class="opt" onclick="select('hanhdong', 'NHẬN', this)">NHẬN</div>
-    <div class="opt" onclick="select('hanhdong', 'TRẢ', this)">TRẢ</div>
-  </div>
+<p>THIẾT BỊ</p>
 
-  <!-- BỘ ĐÀM -->
-  <div id="section-bodam">
-    <div class="label">BỘ ĐÀM *</div>
-    <div class="options" id="opts-bodam">
-      <div class="opt" onclick="select('bodam', '3', this)">3</div>
-      <div class="opt" onclick="select('bodam', '4', this)">4</div>
-      <div class="opt" onclick="select('bodam', '5', this)">5</div>
-      <div class="opt" onclick="select('bodam', '6', this)">6</div>
-      <div class="opt" onclick="select('bodam', '7', this)">7</div>
-      <div class="opt" onclick="select('bodam', '8', this)">8</div>
-      <div class="opt" onclick="select('bodam', '9', this)">9</div>
-      <div class="opt" onclick="select('bodam', '10', this)">10</div>
-      <div class="opt" onclick="select('bodam', '11', this)">11</div>
-    </div>
-  </div>
+<select id="thietbi" onchange="loadDevice()">
+<option value="">Chọn</option>
+<option value="BỘ ĐÀM">BỘ ĐÀM</option>
+<option value="THẺ TỪ">THẺ TỪ</option>
+</select>
 
-  <!-- THẺ TỪ -->
-  <div id="section-thetu">
-    <div class="label">THẺ TỪ *</div>
-    <div class="options" id="opts-thetu">
-      <div class="opt" onclick="select('thetu', '5', this)">5</div>
-      <div class="opt" onclick="select('thetu', '12', this)">12</div>
-    </div>
-  </div>
+<p>HÀNH ĐỘNG</p>
 
-  <!-- NGƯỜI DÙNG -->
-  <div class="label">NGƯỜI DÙNG *</div>
-  <select id="nguoidung">
-  <option value="">-- Chọn tên --</option>
-  <option>UYÊN 3</option>
-  <option>HẰNG 6</option>
-  <option>TUYỀN 4</option>
-  <option>TRƯỜNG 3</option>
-  <option>TRANG 16</option>
-  <option>HƯƠNG 6</option>
-  <option>THU 15</option>
-  <option>DUNG 6</option>
-  <option>LOAN 3</option>
-  <option>HUY 7</option>
-  <option>VY 15</option>
-  <option>YẾN 7</option>
-  <option>NGÂN 15</option>
-  <option>TIẾN 6</option>
-  <option>TRANG 45</option>
-  <option>HÂN 4</option>
-  <option>CHI 2</option>
-  <option>YẾN 5</option>
-  <option>TÂM 4</option>
-  <option>YÊN 2</option>
-  <option>NGỌC 18</option>
-  <option>MINH 11</option>
-  <option>HẠNH 8</option>
-  <option>HẢO 1</option>
-  <option>THẢO 27</option>
-  <option>THÚY 3</option>
-  <option>LOAN 4</option>
-  <option>MỴ 3</option>
-  <option>HƯỜNG 15</option>
-  <option>THỦY 17</option>
-  <option>TIẾN 8</option>
-  <option>ÂN 6</option>
-  <option>BẢY 7</option>
-  <option>VÂN 1</option>
-  <option>LINH 18</option>
-  <option>HẰNG 11</option>
-  <option>THỦY 22</option>
-  <option>ANH 52</option>
-  <option>PHƯỢNG 27</option>
-  <option>CHÂU 4</option>
-  <option>TRANG 41</option>
-  <option>HIỀN 4</option>
-  <option>ANH 54</option>
-  <option>TRỌNG 1</option>
-  <option>ANH 62</option>
-  <option>NHẬT 1</option>
-  <option>TÌNH 1</option>
-  <option>HỒNG 7</option>
-  <option>DUY 5</option>
-  <option>THI 1</option>
-  <option>THÀNH 12</option>
-  <option>HÀ 2</option>
-  <option>DUYÊN1</option>
-  <option>HIỀN 5</option>
-  <option>DUY 6</option>
-  <option>LAN 5</option>
-  <option>MAI 5</option>
-  <option>ĐOAN 1</option>
-  <option>TÀI 1</option>
-  <option>KHÁNH 4</option>
-  <option>KHOA 2</option>
-  <option>PHƯƠNG 31</option>
-  <option>LY 6</option>
-  <option>LỘC 2</option>
-  <option>ANH 63</option>
-  <option>NGỌC 24</option>
-  <option>THỦY 24</option>
-  <option>OANH 7</option>
-  <option>DUYÊN 8</option>
-  <option>KHÁNH 3</option>
-  <option>ANH 64</option>
-  <option>DƯƠNG 1</option>
-  <option>THÙY 1</option>
-  <option>TRÚC 8</option>
-  <option>VIỆT 1</option>
-  <option>NHÃ 1</option>
-  <option>THƯ 1</option>
-  <option>NGÂN 16</option>
-  <option>THY 5</option>
-  <option>VÀNG 1</option>
-  <option>TÂM 5</option>
-  <option>TRANG 26</option>
-  <option>THẢO 9</option>
-  <option>DUYÊN 9</option>
-  <option>BĂNG 1</option>
-  <option>CHÂU 5</option>
-  <option>THƯ 18</option>
-  <option>MY 2</option>
-  <option>LINH 19</option>
-  <option>THU 20</option>
-  <option>THƯ 19</option>
-  <option>THẢO 10</option>
-  <option>VÂN 3</option>
-  <option>DŨNG</option>
-  <option>TUYẾT</option>
-  <option>SONG</option>
-  <option>ÁNH</option>
-  <option>HÒA</option>
-  <option>NHU</option>
-  <option>AN</option>
-  <option>TRINH</option>
-  <option>HUY 4</option>
-  <option>YẾN 4</option>
-  <option>LINH 2</option>
-  <option>TRÚC 7</option>
-  <option>MINH 3</option>
-  <option>HIẾU 4</option>
-  <option>HOÀNG 3</option>
-  <option>QUÂN</option>
-  <option>SANG</option>
-  <option>LINH 7</option>
-  <option>PHƯƠNG 12</option>
-  <option>THANH 6</option>
-  <option>TUẤN 5</option>
-  <option>HƯƠNG 11</option>
-  <option>TRANG 25</option>
-  <option>THẢO 8</option>
-  <option>HẰNG 10</option>
-  <option>HẰNG 5</option>
-  <option>THỦY 23</option>
-  <option>KHOA 1</option>
-  <option>KHÁNH 2</option>
-  <option>TRÍ 4</option>
-  </select>
+<select id="hanhdong">
+<option value="">Chọn</option>
+<option value="NHẬN">NHẬN</option>
+<option value="TRẢ">TRẢ</option>
+</select>
 
-  <button class="btn-submit" id="btn" onclick="handleSubmit()">XÁC NHẬN THÔNG TIN →</button>
-  <div class="status" id="status"></div>
+<p>SỐ THIẾT BỊ</p>
+
+<select id="so"></select>
+
+<p>NGƯỜI DÙNG</p>
+
+<select id="nguoidung">
+
+<option value="">Chọn người dùng</option>
+
+<option>UYÊN 3</option>
+<option>TRÍ 4</option>
+<option>HOÀNG 3</option>
+
+</select>
+
+<button onclick="submitData()">
+XÁC NHẬN
+</button>
+
+<div id="status" class="status"></div>
+
 </div>
 
 <script>
-  const TARGET_LAT = 10.816551;
-  const TARGET_LNG = 106.663563;
-  const MAX_DISTANCE = 100;
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyIqGYxz2hvVPa5PkXsIH7GggZRtJR11ehUzA7NXiN680q-MB3XA9xiJigsRI6VnPft/exec";
 
-  const selected = {
-    thietbi: "",
-    hanhdong: "",
-    bodam: "",
-    thetu: ""
-  };
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzfyjm5E2wzFxWc559ZgXgdYFb6S16Gj52pn-ETCWKBANWb-negT1a0UqJOnpDdlE_L/exec";
 
-  function select(type, value, el) {
-    const colorMap = {
-      thietbi: "selected-thietbi",
-      hanhdong: value === "NHẬN" ? "selected-hanhdong-nhan" : "selected-hanhdong-tra",
-      bodam: "selected-bodam",
-      thetu: "selected-thetu"
-    };
-    document.querySelectorAll("#opts-" + type + " .opt").forEach(o => {
-      o.className = "opt";
-    });
-    el.classList.add(colorMap[type]);
-    selected[type] = value;
+const TARGET_LAT = 10.816551;
+const TARGET_LNG = 106.663563;
 
-    if (type === "thietbi") {
-      document.getElementById("section-bodam").style.display = value === "BỘ ĐÀM" ? "block" : "none";
-      document.getElementById("section-thetu").style.display = value === "THẺ TỪ" ? "block" : "none";
-      selected.bodam = "";
-      selected.thetu = "";
-      document.querySelectorAll("#opts-bodam .opt, #opts-thetu .opt").forEach(o => o.className = "opt");
-    }
-  }
+const MAX_DISTANCE = 50;
 
-  function handleSubmit() {
-    const nguoidung = document.getElementById("nguoidung").value;
-    const thietbi = selected.thietbi;
-    const hanhdong = selected.hanhdong;
-    const deviceNumber = thietbi === "BỘ ĐÀM" ? selected.bodam : selected.thetu;
+function loadDevice(){
 
-    if (!thietbi || !hanhdong || !deviceNumber || !nguoidung) {
-      showStatus("❌ Vui lòng điền đầy đủ thông tin!", "error");
-      return;
-    }
+const tb = document.getElementById("thietbi").value;
 
-    if (hanhdong === "TRẢ") {
-      checkGPS(thietbi, hanhdong, deviceNumber, nguoidung);
-    } else {
-      submitData(thietbi, hanhdong, deviceNumber, nguoidung);
-    }
-  }
+const so = document.getElementById("so");
 
-  function checkGPS(thietbi, hanhdong, deviceNumber, nguoidung) {
-    const btn = document.getElementById("btn");
-    btn.disabled = true;
-    btn.textContent = "Đang kiểm tra vị trí...";
-    showStatus("📍 Đang lấy vị trí GPS...", "");
+so.innerHTML="";
 
-    if (!navigator.geolocation) {
-      showStatus("❌ Trình duyệt không hỗ trợ GPS!", "error");
-      resetBtn();
-      return;
-    }
+let list=[];
 
-    navigator.geolocation.getCurrentPosition(
-      function(pos) {
-        const dist = getDistance(pos.coords.latitude, pos.coords.longitude, TARGET_LAT, TARGET_LNG);
-        if (dist <= MAX_DISTANCE) {
-          submitData(thietbi, hanhdong, deviceNumber, nguoidung);
-        } else {
-          showStatus("❌ Bạn không ở đúng địa điểm! (cách " + Math.round(dist) + "m)", "error");
-          resetBtn();
-        }
-      },
-      function(err) {
-        let msg = "❌ Không lấy được vị trí!";
-        if (err.code === 1) msg = "❌ Bạn đã từ chối quyền GPS!";
-        if (err.code === 3) msg = "❌ Quá thời gian, thử lại!";
-        showStatus(msg, "error");
-        resetBtn();
-      },
-      { timeout: 10000, maximumAge: 0, enableHighAccuracy: true }
-    );
-  }
-
-  function submitData(thietbi, hanhdong, deviceNumber, nguoidung) {
-
-  const btn = document.getElementById("btn");
-
-  btn.disabled = true;
-  btn.textContent = "Đang gửi...";
-
-  showStatus("", "");
-
-  fetch(WEB_APP_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      thietbi: thietbi,
-      hanhdong: hanhdong,
-      deviceNumber: deviceNumber,
-      nguoidung: nguoidung
-    })
-  })
-  .then(res => res.text())
-  .then(text => {
-
-    console.log("Server response:", text);
-
-    showStatus("✅ Xác nhận thành công!", "success");
-
-    btn.textContent = "✅ HOÀN TẤT";
-
-    setTimeout(() => {
-      location.reload();
-    }, 1500);
-
-  })
-  .catch(err => {
-
-    console.error(err);
-
-    showStatus("❌ Không gửi được dữ liệu!", "error");
-
-    resetBtn();
-
-  });
+if(tb==="BỘ ĐÀM"){
+list=["3","5","6","7","8","9","10","11"];
 }
-  function getDistance(lat1, lng1, lat2, lng2) {
-    const R = 6371000;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLng = (lng2 - lng1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-      Math.sin(dLng/2) * Math.sin(dLng/2);
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  }
 
-  function showStatus(msg, type) {
-    const s = document.getElementById("status");
-    s.textContent = msg;
-    s.className = "status " + type;
-  }
+if(tb==="THẺ TỪ"){
+list=["6","12"];
+}
 
-  function resetBtn() {
-    const btn = document.getElementById("btn");
-    btn.disabled = false;
-    btn.textContent = "XÁC NHẬN THÔNG TIN →";
-  }
+list.forEach(x=>{
+let op=document.createElement("option");
+op.value=x;
+op.text=x;
+so.appendChild(op);
+});
+
+}
+
+function submitData(){
+
+const thietbi =
+document.getElementById("thietbi").value;
+
+const hanhdong =
+document.getElementById("hanhdong").value;
+
+const so =
+document.getElementById("so").value;
+
+const nguoidung =
+document.getElementById("nguoidung").value;
+
+if(!thietbi || !hanhdong || !so || !nguoidung){
+
+show("Vui lòng nhập đủ thông tin");
+return;
+
+}
+
+if(hanhdong==="TRẢ"){
+
+checkGPS(
+thietbi,
+hanhdong,
+so,
+nguoidung
+);
+
+}else{
+
+sendData(
+thietbi,
+hanhdong,
+so,
+nguoidung
+);
+
+}
+
+}
+
+function checkGPS(
+thietbi,
+hanhdong,
+so,
+nguoidung
+){
+
+navigator.geolocation.getCurrentPosition(
+
+function(pos){
+
+const d =
+distance(
+pos.coords.latitude,
+pos.coords.longitude,
+TARGET_LAT,
+TARGET_LNG
+);
+
+if(d<=50){
+
+sendData(
+thietbi,
+hanhdong,
+so,
+nguoidung
+);
+
+}else{
+
+show(
+"Bạn cách vị trí "
++
+Math.round(d)
++
+"m"
+);
+
+}
+
+},
+
+function(){
+
+show("Không lấy được GPS");
+
+},
+
+{
+enableHighAccuracy:true
+}
+
+);
+
+}
+
+function sendData(
+thietbi,
+hanhdong,
+so,
+nguoidung
+){
+
+show("Đang gửi...");
+
+fetch(
+WEB_APP_URL,
+{
+method:"POST",
+body:JSON.stringify({
+thietbi,
+hanhdong,
+so,
+nguoidung
+})
+}
+)
+.then(()=>{
+
+show("✅ Thành công");
+
+setTimeout(()=>{
+location.reload();
+},1500);
+
+})
+.catch(()=>{
+
+show("❌ Lỗi gửi dữ liệu");
+
+});
+
+}
+
+function distance(
+lat1,
+lon1,
+lat2,
+lon2
+){
+
+const R=6371000;
+
+const dLat=
+(lat2-lat1)*Math.PI/180;
+
+const dLon=
+(lon2-lon1)*Math.PI/180;
+
+const a=
+Math.sin(dLat/2)**2+
+Math.cos(lat1*Math.PI/180)*
+Math.cos(lat2*Math.PI/180)*
+Math.sin(dLon/2)**2;
+
+return R*2*Math.atan2(
+Math.sqrt(a),
+Math.sqrt(1-a)
+);
+
+}
+
+function show(msg){
+
+document.getElementById("status").innerText=msg;
+
+}
+
 </script>
+
 </body>
 </html>
