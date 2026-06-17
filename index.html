@@ -350,6 +350,27 @@ background:linear-gradient(
 );
 color:white;
 }
+
+.btn-disabled{
+background:#edf2f7;
+border-color:#e2e8f0;
+color:#a0aec0;
+cursor:not-allowed;
+position:relative;
+}
+
+.btn-disabled:hover{
+transform:none;
+border-color:#e2e8f0;
+}
+
+.btn-disabled .nguoi-giu{
+display:block;
+font-size:10px;
+font-weight:600;
+margin-top:2px;
+color:#cbd5e0;
+}
   
 </style>
 </head>
@@ -704,6 +725,10 @@ function chon(type,value,el){
           TRẢ
         </div>
       `;
+
+      if(selected.thietbi){
+        renderSo();
+      }
     }
 
     return;
@@ -739,9 +764,52 @@ document.getElementById("hanhdong-group").innerHTML =
     onclick="chon('hanhdong','${value}',this)">
     ${value}
   </div>`;
+
+    if(selected.thietbi){
+      renderSo();
+    }
   }
 
 }
+// Lưu trạng thái thiết bị đang bị mượn, dạng { "BỘ ĐÀM|3": "TÊN NGƯỜI ĐANG GIỮ", ... }
+let trangThaiMuon = {};
+
+function capNhatTrangThai(){
+
+  fetch(WEB_APP_URL + "?action=trangthai")
+    .then(function(res){
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      return res.json();
+    })
+    .then(function(json){
+
+      if(!json || json.success !== true) return;
+
+      const moi = {};
+
+      (json.data || []).forEach(function(item){
+        moi[item.thietbi + "|" + item.so] = item.nguoidung || "Đang mượn";
+      });
+
+      trangThaiMuon = moi;
+
+      // Vẽ lại danh sách số nếu đang hiển thị, để áp dụng trạng thái mới
+      if(selected.thietbi){
+        renderSo();
+      }
+
+    })
+    .catch(function(){
+      // Im lặng bỏ qua nếu lỗi mạng tạm thời, không làm phiền người dùng
+      // vì đây chỉ là cập nhật nền, không phải hành động chính
+    });
+
+}
+
+// Lấy trạng thái lần đầu khi mở trang, sau đó tự lặp lại mỗi 30 giây
+capNhatTrangThai();
+setInterval(capNhatTrangThai, 30000);
+
 function renderSo(){
 
 const box =
@@ -763,6 +831,20 @@ html+='<div class="group" id="so-group">';
 
 ds.forEach(s=>{
 
+const key = selected.thietbi + "|" + s;
+const dangMuon = selected.hanhdong === "NHẬN" && trangThaiMuon[key];
+
+if(dangMuon){
+
+html+=`
+<div class="btn btn-disabled" title="Đang được mượn">
+${s}
+<span class="nguoi-giu">${trangThaiMuon[key]}</span>
+</div>
+`;
+
+}else{
+
 html+=`
 <div
 class="btn"
@@ -770,6 +852,8 @@ onclick="chonSo('${s}',this)">
 ${s}
 </div>
 `;
+
+}
 
 });
 
