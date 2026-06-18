@@ -786,10 +786,13 @@ function capNhatTrangThai(){
 
   fetch(WEB_APP_URL + "?action=trangthai")
     .then(function(res){
+      console.log("[DEBUG] HTTP status:", res.status, res.ok);
       if(!res.ok) throw new Error("HTTP "+res.status);
       return res.json();
     })
     .then(function(json){
+
+      console.log("[DEBUG] JSON nhận được:", json);
 
       if(!json || json.success !== true) return;
 
@@ -803,13 +806,17 @@ function capNhatTrangThai(){
       trangThaiMuon = moi;
       daTaiTrangThaiLanDau = true;
 
+      console.log("[DEBUG] trangThaiMuon sau khi xử lý:", trangThaiMuon);
+      console.log("[DEBUG] selected.thietbi hiện tại:", JSON.stringify(selected.thietbi));
+
       // Vẽ lại danh sách số nếu đang hiển thị, để áp dụng trạng thái mới
       if(selected.thietbi){
         renderSo();
       }
 
     })
-    .catch(function(){
+    .catch(function(err){
+      console.log("[DEBUG] Lỗi khi gọi capNhatTrangThai:", err);
       // Im lặng bỏ qua nếu lỗi mạng tạm thời, không làm phiền người dùng
       // vì đây chỉ là cập nhật nền, không phải hành động chính
       daTaiTrangThaiLanDau = true; // coi như đã thử xong, tránh kẹt mãi ở trạng thái chờ
@@ -845,10 +852,15 @@ html+='<div style="text-align:center;font-size:13px;color:#a0aec0;margin-bottom:
 
 html+='<div class="group" id="so-group">';
 
+console.log("[DEBUG] renderSo - thietbi:", JSON.stringify(selected.thietbi), "- danh sách số:", ds);
+console.log("[DEBUG] renderSo - trangThaiMuon hiện tại:", trangThaiMuon);
+
 ds.forEach(s=>{
 
 const key = chuanHoaKey(selected.thietbi, s);
 const nguoiDangGiu = trangThaiMuon[key];
+
+console.log("[DEBUG] kiểm tra key:", JSON.stringify(key), "-> tìm thấy:", nguoiDangGiu);
 
 if(nguoiDangGiu){
 
