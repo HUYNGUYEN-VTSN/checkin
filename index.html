@@ -776,6 +776,12 @@ document.getElementById("hanhdong-group").innerHTML =
 let trangThaiMuon = {};
 let daTaiTrangThaiLanDau = false;
 
+// Chuẩn hóa chuỗi (NFC) để tránh lệch dạng tổ hợp dấu tiếng Việt
+// giữa dữ liệu từ Google Sheet và chuỗi viết trong code.
+function chuanHoaKey(thietbi, so){
+  return (thietbi || "").normalize("NFC") + "|" + so;
+}
+
 function capNhatTrangThai(){
 
   fetch(WEB_APP_URL + "?action=trangthai")
@@ -790,7 +796,8 @@ function capNhatTrangThai(){
       const moi = {};
 
       (json.data || []).forEach(function(item){
-        moi[item.thietbi + "|" + item.so] = item.nguoidung || "Đang mượn";
+        const key = chuanHoaKey(item.thietbi, item.so);
+        moi[key] = item.nguoidung || "Đang mượn";
       });
 
       trangThaiMuon = moi;
@@ -840,7 +847,7 @@ html+='<div class="group" id="so-group">';
 
 ds.forEach(s=>{
 
-const key = selected.thietbi + "|" + s;
+const key = chuanHoaKey(selected.thietbi, s);
 const nguoiDangGiu = trangThaiMuon[key];
 
 if(nguoiDangGiu){
@@ -887,7 +894,7 @@ function chonSo(so,el){
 
   selected.so = so;
 
-const key = selected.thietbi + "|" + so;
+const key = chuanHoaKey(selected.thietbi, so);
 const nguoiDangGiu = trangThaiMuon[key];
 
 document.getElementById("so-group").innerHTML =
