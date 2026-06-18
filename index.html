@@ -797,7 +797,14 @@ function capNhatTrangThai(){
     })
     .then(function(json){
 
-      if(!json || json.success !== true) return;
+      console.log("[DEBUG trangthai] response:", json);
+
+      daTaiTrangThaiLanDau = true;
+
+      if(!json || json.success !== true){
+        if(selected.thietbi) renderSo();
+        return;
+      }
 
       const moi = {};
 
@@ -807,7 +814,6 @@ function capNhatTrangThai(){
       });
 
       trangThaiMuon = moi;
-      daTaiTrangThaiLanDau = true;
 
       // Vẽ lại danh sách số nếu đang hiển thị, để áp dụng trạng thái mới
       if(selected.thietbi){
@@ -815,10 +821,12 @@ function capNhatTrangThai(){
       }
 
     })
-    .catch(function(){
+    .catch(function(err){
+      console.log("[DEBUG trangthai] lỗi:", err);
       // Im lặng bỏ qua nếu lỗi mạng tạm thời, không làm phiền người dùng
       // vì đây chỉ là cập nhật nền, không phải hành động chính
       daTaiTrangThaiLanDau = true; // coi như đã thử xong, tránh kẹt mãi ở trạng thái chờ
+      if(selected.thietbi) renderSo();
     });
 
 }
