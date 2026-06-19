@@ -728,7 +728,7 @@ function chon(type,value,el){
       `;
 
       if(selected.thietbi){
-        renderSo(true);
+        renderSo();
       }
     }
 
@@ -767,7 +767,7 @@ document.getElementById("hanhdong-group").innerHTML =
   </div>`;
 
     if(selected.thietbi){
-      renderSo(true);
+      renderSo();
     }
   }
 
@@ -800,7 +800,7 @@ function capNhatTrangThai(){
       daTaiTrangThaiLanDau = true;
 
       if(!json || json.success !== true){
-        if(selected.thietbi) renderSo(true);
+        if(selected.thietbi) renderSo();
         return;
       }
 
@@ -814,9 +814,8 @@ function capNhatTrangThai(){
       trangThaiMuon = moi;
 
       // Vẽ lại danh sách số nếu đang hiển thị, để áp dụng trạng thái mới
-      // (giuLuaChon=true: không xóa lựa chọn người dùng đang chọn)
       if(selected.thietbi){
-        renderSo(true);
+        renderSo();
       }
 
     })
@@ -824,7 +823,7 @@ function capNhatTrangThai(){
       // Im lặng bỏ qua nếu lỗi mạng tạm thời, không làm phiền người dùng
       // vì đây chỉ là cập nhật nền, không phải hành động chính
       daTaiTrangThaiLanDau = true; // coi như đã thử xong, tránh kẹt mãi ở trạng thái chờ
-      if(selected.thietbi) renderSo(true);
+      if(selected.thietbi) renderSo();
     });
 
 }
@@ -833,7 +832,7 @@ function capNhatTrangThai(){
 capNhatTrangThai();
 setInterval(capNhatTrangThai, 30000);
 
-function renderSo(giuLuaChon){
+function renderSo(){
 
 const box =
 document.getElementById("so-container");
@@ -846,18 +845,6 @@ ds=[3,4,5,7,8,9,10,11];
 
 if(selected.thietbi==="THẺ TỪ"){
 ds=[5,16,"MTB"];
-}
-
-// Nếu được gọi lại để refresh trạng thái nền (giuLuaChon=true)
-// và số đang chọn vẫn còn hợp lệ trong danh sách -> giữ nguyên lựa chọn.
-// Ngược lại (đổi loại thiết bị, hoặc lần hiển thị đầu tiên) -> reset.
-const soDangChonHopLe =
-  giuLuaChon &&
-  selected.so !== "" &&
-  ds.some(s => String(s) === String(selected.so));
-
-if(!soDangChonHopLe){
-  selected.so="";
 }
 
 let html=
@@ -873,25 +860,37 @@ ds.forEach(s=>{
 
 const key = chuanHoaKey(selected.thietbi, s);
 const nguoiDangGiu = trangThaiMuon[key];
-const dangDuocChon = soDangChonHopLe && String(s) === String(selected.so);
-const cssClass = dangDuocChon
-  ? "btn selected-so"
-  : (nguoiDangGiu ? "btn btn-co-nguoi-giu" : "btn");
+
+if(nguoiDangGiu){
 
 html+=`
 <div
-class="${cssClass}"
+class="btn btn-co-nguoi-giu"
 onclick="chonSo('${s}',this)">
 ${s}
-${nguoiDangGiu ? `<span class="nguoi-giu">${nguoiDangGiu}</span>` : ""}
+<span class="nguoi-giu">${nguoiDangGiu}</span>
 </div>
 `;
+
+}else{
+
+html+=`
+<div
+class="btn"
+onclick="chonSo('${s}',this)">
+${s}
+</div>
+`;
+
+}
 
 });
 
 html+='</div>';
 
 box.innerHTML=html;
+
+selected.so="";
 
 }
 
@@ -999,6 +998,17 @@ function sendData(nguoidung,lat,lng){
 
 show("Đang gửi...","");
 
+const payload = {
+thietbi:selected.thietbi,
+hanhdong:selected.hanhdong,
+so:selected.so,
+nguoidung:nguoidung,
+lat:lat,
+lng:lng
+};
+
+console.log("[DEBUG sendData] payload:", payload);
+
 fetch(
 WEB_APP_URL,
 {
@@ -1006,14 +1016,7 @@ method:"POST",
 headers:{
 "Content-Type":"text/plain;charset=utf-8"
 },
-body:JSON.stringify({
-thietbi:selected.thietbi,
-hanhdong:selected.hanhdong,
-so:selected.so,
-nguoidung:nguoidung,
-lat:lat,
-lng:lng
-})
+body:JSON.stringify(payload)
 }
 )
 .then(function(res){
@@ -1023,6 +1026,8 @@ lng:lng
   return res.text();
 })
 .then(function(text){
+
+  console.log("[DEBUG sendData] response text:", text);
 
   let data = null;
   try{ data = JSON.parse(text); }catch(e){}
