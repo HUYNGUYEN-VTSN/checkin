@@ -433,6 +433,7 @@ TRẢ
   <option>TUYỀN 4</option>
   <option>TRƯỜNG 3</option>
   <option>TRANG 16</option>
+  <option>QUỲNH 6</option>
   <option>HƯƠNG 6</option>
   <option>THU 15</option>
   <option>DUNG 6</option>
@@ -495,6 +496,8 @@ TRẢ
   <option>ANH 63</option>
   <option>NGỌC 24</option>
   <option>THỦY 24</option>
+  <option>OANH 7</option>
+  <option>DUYÊN 8</option>
   <option>KHÁNH 3</option>
   <option>ANH 64</option>
   <option>DƯƠNG 1</option>
@@ -514,6 +517,7 @@ TRẢ
   <option>CHÂU 5</option>
   <option>THƯ 18</option>
   <option>MY 2</option>
+  <option>LINH 19</option>
   <option>THU 20</option>
   <option>THƯ 19</option>
   <option>THẢO 10</option>
@@ -526,6 +530,10 @@ TRẢ
   <option>NHU</option>
   <option>AN</option>
   <option>TRINH</option>
+  <option>HÀ</option>
+  <option>THU</option>
+  <option>MINH</option>
+  <option>HUY 4</option>
   <option>YẾN 4</option>
   <option>LINH 2</option>
   <option>TRÚC 7</option>
@@ -534,6 +542,7 @@ TRẢ
   <option>HOÀNG 3</option>
   <option>QUÂN</option>
   <option>SANG</option>
+  <option>LINH 7</option>
   <option>PHƯƠNG 12</option>
   <option>THANH 6</option>
   <option>TUẤN 5</option>
@@ -561,8 +570,8 @@ XÁC NHẬN
 const WEB_APP_URL =
 "https://script.google.com/macros/s/AKfycbzD9VssdefflSJHc8MMjXkudgK4b-GNK4H8wPHdNSYvbxblI2qrBOPipSzMrvSk-y2a/exec";
 
-const TARGET_LAT = 10.8165299;
-const TARGET_LNG = 106.6635618;
+const TARGET_LAT = 10.816357;
+const TARGET_LNG = 106.663301;
 const MAX_DISTANCE = 50;
 
 let selected = {
@@ -791,7 +800,7 @@ function capNhatTrangThai(){
       daTaiTrangThaiLanDau = true;
 
       if(!json || json.success !== true){
-        if(selected.thietbi) renderSo();
+        if(selected.thietbi) renderSo(true);
         return;
       }
 
@@ -805,8 +814,9 @@ function capNhatTrangThai(){
       trangThaiMuon = moi;
 
       // Vẽ lại danh sách số nếu đang hiển thị, để áp dụng trạng thái mới
+      // (giuLuaChon=true: không xóa lựa chọn người dùng đang chọn)
       if(selected.thietbi){
-        renderSo();
+        renderSo(true);
       }
 
     })
@@ -814,7 +824,7 @@ function capNhatTrangThai(){
       // Im lặng bỏ qua nếu lỗi mạng tạm thời, không làm phiền người dùng
       // vì đây chỉ là cập nhật nền, không phải hành động chính
       daTaiTrangThaiLanDau = true; // coi như đã thử xong, tránh kẹt mãi ở trạng thái chờ
-      if(selected.thietbi) renderSo();
+      if(selected.thietbi) renderSo(true);
     });
 
 }
@@ -823,7 +833,7 @@ function capNhatTrangThai(){
 capNhatTrangThai();
 setInterval(capNhatTrangThai, 30000);
 
-function renderSo(){
+function renderSo(giuLuaChon){
 
 const box =
 document.getElementById("so-container");
@@ -836,6 +846,18 @@ ds=[3,4,5,7,8,9,10,11];
 
 if(selected.thietbi==="THẺ TỪ"){
 ds=[5,16,"MTB"];
+}
+
+// Nếu được gọi lại để refresh trạng thái nền (giuLuaChon=true)
+// và số đang chọn vẫn còn hợp lệ trong danh sách -> giữ nguyên lựa chọn.
+// Ngược lại (đổi loại thiết bị, hoặc lần hiển thị đầu tiên) -> reset.
+const soDangChonHopLe =
+  giuLuaChon &&
+  selected.so !== "" &&
+  ds.some(s => String(s) === String(selected.so));
+
+if(!soDangChonHopLe){
+  selected.so="";
 }
 
 let html=
@@ -851,37 +873,25 @@ ds.forEach(s=>{
 
 const key = chuanHoaKey(selected.thietbi, s);
 const nguoiDangGiu = trangThaiMuon[key];
-
-if(nguoiDangGiu){
-
-html+=`
-<div
-class="btn btn-co-nguoi-giu"
-onclick="chonSo('${s}',this)">
-${s}
-<span class="nguoi-giu">${nguoiDangGiu}</span>
-</div>
-`;
-
-}else{
+const dangDuocChon = soDangChonHopLe && String(s) === String(selected.so);
+const cssClass = dangDuocChon
+  ? "btn selected-so"
+  : (nguoiDangGiu ? "btn btn-co-nguoi-giu" : "btn");
 
 html+=`
 <div
-class="btn"
+class="${cssClass}"
 onclick="chonSo('${s}',this)">
 ${s}
+${nguoiDangGiu ? `<span class="nguoi-giu">${nguoiDangGiu}</span>` : ""}
 </div>
 `;
-
-}
 
 });
 
 html+='</div>';
 
 box.innerHTML=html;
-
-selected.so="";
 
 }
 
@@ -948,7 +958,7 @@ const d = distance(lat,lng,TARGET_LAT,TARGET_LNG);
 if(d>MAX_DISTANCE){
 
 show(
-"❌ Vị trí đang cách xa phòng đội ","error"
+"❌ Ngoài phạm vi phòng đội (cách "+Math.round(d)+"m)","error"
 );
 setSubmitting(false);
 return;
