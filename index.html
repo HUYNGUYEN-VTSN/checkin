@@ -1007,8 +1007,6 @@ lat:lat,
 lng:lng
 };
 
-console.log("[DEBUG sendData] payload:", payload);
-
 fetch(
 WEB_APP_URL,
 {
@@ -1026,8 +1024,6 @@ body:JSON.stringify(payload)
   return res.text();
 })
 .then(function(text){
-
-  console.log("[DEBUG sendData] response text:", text);
 
   let data = null;
   try{ data = JSON.parse(text); }catch(e){}
