@@ -957,7 +957,7 @@ const d = distance(lat,lng,TARGET_LAT,TARGET_LNG);
 if(d>MAX_DISTANCE){
 
 show(
-"❌ Ngoài phạm vi phòng đội (cách "+Math.round(d)+"m)","error"
+"❌ Ngoài phạm vi phòng đội, vui lòng thử lại","error"
 );
 setSubmitting(false);
 return;
