@@ -306,6 +306,65 @@ color:#16a34a;
 .error{
 color:#dc2626;
 }
+
+.contact-note{
+margin-top:24px;
+text-align:center;
+font-size:12px;
+color:#a0aec0;
+border-top:1px solid #edf2f7;
+padding-top:16px;
+}
+
+#canhbao-container{
+margin-top:20px;
+}
+
+.canhbao-title{
+font-size:13px;
+font-weight:800;
+color:#c0392b;
+text-align:center;
+margin-bottom:10px;
+}
+
+.canhbao-list{
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.canhbao-item{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+background:#fff5f5;
+border:1.5px solid #feb2b2;
+border-radius:14px;
+padding:10px 16px;
+font-size:13px;
+}
+
+.canhbao-ten{
+font-weight:800;
+color:#c0392b;
+flex:1;
+}
+
+.canhbao-thietbi{
+color:#718096;
+font-weight:600;
+}
+
+.canhbao-gio{
+font-weight:800;
+color:#e53e3e;
+background:#fed7d7;
+padding:3px 10px;
+border-radius:999px;
+font-size:12px;
+}
 .selected-bodam{
 background:linear-gradient(
 135deg,
@@ -428,17 +487,18 @@ TRẢ
 
 <select id="nguoidung" style="display:none">
   <option value="">-- Chọn tên --</option>
-  <option>VY 15</option>
-  <option>TRƯỜNG 3</option>
-  <option>HUY 7</option>
   <option>UYÊN 3</option>
   <option>HẰNG 6</option>
   <option>TUYỀN 4</option>
+  <option>TRƯỜNG 3</option>
   <option>TRANG 16</option>
+  <option>QUỲNH 6</option>
   <option>HƯƠNG 6</option>
   <option>THU 15</option>
   <option>DUNG 6</option>
   <option>LOAN 3</option>
+  <option>HUY 7</option>
+  <option>VY 15</option>
   <option>YẾN 7</option>
   <option>NGÂN 15</option>
   <option>TIẾN 6</option>
@@ -457,7 +517,6 @@ TRẢ
   <option>LOAN 4</option>
   <option>MỴ 3</option>
   <option>HƯỜNG 15</option>
-  <option>HẰNG 5</option>
   <option>THỦY 17</option>
   <option>TIẾN 8</option>
   <option>ÂN 6</option>
@@ -496,6 +555,8 @@ TRẢ
   <option>ANH 63</option>
   <option>NGỌC 24</option>
   <option>THỦY 24</option>
+  <option>OANH 7</option>
+  <option>DUYÊN 8</option>
   <option>KHÁNH 3</option>
   <option>ANH 64</option>
   <option>DƯƠNG 1</option>
@@ -515,6 +576,7 @@ TRẢ
   <option>CHÂU 5</option>
   <option>THƯ 18</option>
   <option>MY 2</option>
+  <option>LINH 19</option>
   <option>THU 20</option>
   <option>THƯ 19</option>
   <option>THẢO 10</option>
@@ -527,6 +589,9 @@ TRẢ
   <option>NHU</option>
   <option>AN</option>
   <option>TRINH</option>
+  <option>HÀ</option>
+  <option>THU</option>
+  <option>MINH</option>
   <option>HUY 4</option>
   <option>YẾN 4</option>
   <option>LINH 2</option>
@@ -556,6 +621,12 @@ XÁC NHẬN
 </button>
 
 <div id="status"></div>
+
+<div id="canhbao-container"></div>
+
+<div class="contact-note">
+Mọi thắc mắc vui lòng liên hệ Mr Huy
+</div>
 
 </div>
 
@@ -770,10 +841,52 @@ document.getElementById("hanhdong-group").innerHTML =
 let trangThaiMuon = {};
 let daTaiTrangThaiLanDau = false;
 
+// Lưu toàn bộ data thô (gồm cả "time") để tính list cảnh báo quá 8h
+let danhSachThietBiDangMuon = [];
+
 // Chuẩn hóa chuỗi (NFC) để tránh lệch dạng tổ hợp dấu tiếng Việt
 // giữa dữ liệu từ Google Sheet và chuỗi viết trong code.
 function chuanHoaKey(thietbi, so){
   return (thietbi || "").normalize("NFC") + "|" + so;
+}
+
+function renderCanhBaoQua8h(){
+
+  const box = document.getElementById("canhbao-container");
+  if(!box) return;
+
+  const NGUONG_GIO = 8;
+  const now = Date.now();
+
+  const dsQuaGio = danhSachThietBiDangMuon
+    .filter(item => item.time && (now - item.time) / (1000*60*60) >= NGUONG_GIO)
+    .map(item => ({
+      ...item,
+      soGio: (now - item.time) / (1000*60*60)
+    }))
+    .sort((a,b) => b.soGio - a.soGio);
+
+  if(dsQuaGio.length === 0){
+    box.innerHTML = "";
+    return;
+  }
+
+  let html = '<div class="canhbao-title">⚠️ Thiết bị giữ quá 8 tiếng</div>';
+  html += '<div class="canhbao-list">';
+
+  dsQuaGio.forEach(item => {
+    html += `
+      <div class="canhbao-item">
+        <span class="canhbao-ten">${item.nguoidung}</span>
+        <span class="canhbao-thietbi">${item.thietbi} ${item.so}</span>
+        <span class="canhbao-gio">${item.soGio.toFixed(1)}h</span>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  box.innerHTML = html;
+
 }
 
 function capNhatTrangThai(){
@@ -806,6 +919,9 @@ function capNhatTrangThai(){
       });
 
       trangThaiMuon = moi;
+      danhSachThietBiDangMuon = json.data || [];
+
+      renderCanhBaoQua8h();
 
       // Vẽ lại danh sách số nếu đang hiển thị, để áp dụng trạng thái mới
       if(selected.thietbi){
